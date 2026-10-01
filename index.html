@@ -357,6 +357,29 @@
   .foot-belt span:nth-child(6){background:var(--belt-brown)}
   .foot-belt span:nth-child(7){background:var(--belt-black)}
 
+
+  /* ---------- Treino semanal ---------- */
+  .ts-week{
+    display:inline-flex;align-items:center;gap:10px;margin-top:6px;
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:1rem;color:var(--ink);
+    background:#fffdf8;border:1px solid var(--line);border-left:4px solid var(--obi);
+    border-radius:var(--r);padding:10px 16px;
+  }
+  .ts-week svg{width:20px;height:20px;stroke:var(--obi-deep);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .ts-group{margin-top:40px}
+  .ts-group:first-of-type{margin-top:8px}
+  .ts-group h3{font-size:1.15rem;margin-bottom:14px;color:var(--ink-soft)}
+  .ts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;align-items:start}
+  .ts-card{background:#fffdf8;border:1px solid var(--line);border-top:3px solid var(--ink);border-radius:var(--r);padding:28px 30px}
+  .ts-card h4{font-size:1.3rem;margin-bottom:14px}
+  .ts-card ul{list-style:none;margin:0}
+  .ts-card li{position:relative;padding-left:20px;font-size:1rem;color:var(--ink-soft);line-height:1.5;margin:7px 0}
+  .ts-card li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--obi)}
+  .ts-note{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);font-size:.98rem;color:var(--ink-soft)}
+  .ts-video{position:relative;aspect-ratio:16/9;margin-top:18px;border-radius:var(--r);overflow:hidden;background:var(--ink-deep)}
+  .ts-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .ts-msg{padding:22px 26px;border-left:3px solid var(--obi);background:#fffdf8;border-radius:0 var(--r) var(--r) 0;color:var(--ink-soft)}
+
   /* ---------- Reveal ---------- */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s ease}
   .reveal.in{opacity:1;transform:none}
@@ -368,6 +391,7 @@
     .start-steps{grid-template-columns:1fr}
     .proof-inner{grid-template-columns:repeat(2,1fr);gap:28px 24px}
     .belt-stage ul{grid-template-columns:1fr}
+    .ts-grid{grid-template-columns:1fr}
     .hero-kanji{font-size:min(70vw,440px);opacity:.04}
   }
   @media(max-width:640px){
@@ -431,6 +455,7 @@
       <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
     <ul id="navlist">
+      <li><a href="#treino-semanal">Treino semanal</a></li>
       <li><a href="#o-programa">Programa</a></li>
       <li><a href="#valores">Valores</a></li>
       <li><a href="#metodologia">Metodologia</a></li>
@@ -442,6 +467,23 @@
     </ul>
   </div>
 </nav>
+
+<!-- ============ TREINO SEMANAL ============ -->
+<section id="treino-semanal" class="band">
+  <div class="section-head reveal">
+    <span class="eyebrow">Treino Semanal</span>
+    <h2>O que se treina esta semana.</h2>
+    <p>Para os pais acompanharem em casa o que os filhos fazem no tatami. Muda todas as semanas.</p>
+    <div class="ts-week" id="ts-week">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+      <span id="ts-week-text">Semana atual</span>
+    </div>
+  </div>
+  <div id="ts-root" aria-live="polite">
+    <div class="ts-msg">A carregar o treino da semana…</div>
+  </div>
+  <noscript><div class="ts-msg">Ative o JavaScript para ver o treino da semana.</div></noscript>
+</section>
 
 <!-- ============ O PROGRAMA ============ -->
 <section id="o-programa">
@@ -811,6 +853,86 @@
   document.querySelectorAll('#navlist a').forEach(a=>{
     a.addEventListener('click',()=>document.getElementById('navlist').classList.remove('open'));
   });
+</script>
+
+<script>
+  // ---------- Treino semanal: lê o ficheiro treinos.json ----------
+  (function(){
+    const root = document.getElementById('ts-root');
+    const weekText = document.getElementById('ts-week-text');
+    const fmt = new Intl.DateTimeFormat('pt-PT',{day:'numeric',month:'long'});
+
+    // Semana atual (segunda a domingo), calculada automaticamente
+    function semanaAtual(){
+      const hoje = new Date();
+      const dia = (hoje.getDay()+6)%7; // segunda = 0
+      const ini = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()-dia);
+      const fim = new Date(ini.getFullYear(), ini.getMonth(), ini.getDate()+6);
+      return 'Semana de ' + fmt.format(ini) + ' a ' + fmt.format(fim);
+    }
+
+    // Aceita o ID do vídeo ou o link completo do YouTube
+    function idYoutube(v){
+      v = String(v||'').trim();
+      if(!v) return '';
+      const m = v.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/);
+      return m ? m[1] : v;
+    }
+
+    function el(tag, cls, text){
+      const e = document.createElement(tag);
+      if(cls) e.className = cls;
+      if(text!==undefined) e.textContent = text;
+      return e;
+    }
+
+    function cartao(t){
+      const c = el('article','ts-card');
+      c.appendChild(el('h4',null,t.titulo||'Treino'));
+      const ul = el('ul');
+      (t.exercicios||[]).forEach(x=>ul.appendChild(el('li',null,x)));
+      c.appendChild(ul);
+      if(t.nota) c.appendChild(el('p','ts-note',t.nota));
+      const id = idYoutube(t.video);
+      if(id){
+        const w = el('div','ts-video');
+        const f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id);
+        f.title = 'Vídeo: '+(t.titulo||'Treino');
+        f.loading = 'lazy';
+        f.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture';
+        f.allowFullscreen = true;
+        w.appendChild(f);
+        c.appendChild(w);
+      }
+      return c;
+    }
+
+    function mostrar(dados){
+      weekText.textContent = (dados.semana && dados.semana.trim()) || semanaAtual();
+      root.textContent = '';
+      (dados.grupos||[]).forEach(g=>{
+        const bloco = el('div','ts-group');
+        bloco.appendChild(el('h3',null,g.rotulo||''));
+        const grid = el('div','ts-grid');
+        (g.treinos||[]).forEach(t=>grid.appendChild(cartao(t)));
+        bloco.appendChild(grid);
+        root.appendChild(bloco);
+      });
+      if(!root.children.length){
+        root.appendChild(el('div','ts-msg','O treino desta semana ainda não foi publicado.'));
+      }
+    }
+
+    weekText.textContent = semanaAtual();
+    fetch('treinos.json',{cache:'no-cache'})
+      .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(mostrar)
+      .catch(()=>{
+        root.textContent = '';
+        root.appendChild(el('div','ts-msg','Não foi possível carregar o treino desta semana. Tenta novamente mais tarde.'));
+      });
+  })();
 </script>
 </body>
 </html>

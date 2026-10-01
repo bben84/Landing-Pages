@@ -1,0 +1,50 @@
+{
+  "semana": "",
+  "grupos": [
+    {
+      "rotulo": "2 treinos por semana",
+      "treinos": [
+        {
+          "titulo": "Treino 3-6 anos",
+          "exercicios": [
+            "Aquecimento: jogo dos animais (andar como urso, caranguejo e sapo)",
+            "Cambalhotas à frente e de lado no tatami",
+            "Queda para trás sentado, com apoio do treinador",
+            "Percurso de equilíbrio e coordenação",
+            "Jogo final e saudação"
+          ],
+          "nota": "",
+          "video": ""
+        },
+        {
+          "titulo": "Treino 7-11 anos",
+          "exercicios": [
+            "Aquecimento: jogo de pares e deslocamentos",
+            "Quedas: lateral e para trás (ukemi)",
+            "Trabalho a pares: empurrar, puxar e manter o equilíbrio",
+            "Jogos de aplicação",
+            "Retorno à calma e reflexão final"
+          ],
+          "nota": "",
+          "video": ""
+        }
+      ]
+    },
+    {
+      "rotulo": "1 treino por semana",
+      "treinos": [
+        {
+          "titulo": "Treino 3-6 anos",
+          "exercicios": [
+            "Aquecimento lúdico",
+            "Cambalhotas e rolamentos",
+            "Queda para trás sentado",
+            "Jogo final e saudação"
+          ],
+          "nota": "",
+          "video": ""
+        }
+      ]
+    }
+  ]
+}
