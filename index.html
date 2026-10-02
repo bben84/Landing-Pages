@@ -289,6 +289,7 @@
   }
   .profile .badge{
     width:120px;height:120px;border-radius:50%;flex:none;
+    object-fit:cover;object-position:center 25%;
     background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;
     font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:2.4rem;letter-spacing:.02em;
   }
@@ -758,7 +759,7 @@
     <h2>Quem está no tatami consigo.</h2>
   </div>
   <div class="profile reveal">
-    <div class="badge">BB</div>
+    <img class="badge" src="bruno.jpg" alt="Bruno Bento, treinador de judo" onerror="this.outerHTML='<div class=badge>BB</div>'">
     <div>
       <h3>Bruno Bento</h3>
       <p class="role">Treinador Desportivo de Judo · Grau 1</p>
