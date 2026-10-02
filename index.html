@@ -138,6 +138,14 @@
     user-select:none;pointer-events:none;white-space:nowrap;
   }
   .hero-inner{position:relative;max-width:var(--maxw);margin:0 auto;z-index:1}
+  .hero-inner{display:flex;align-items:center;justify-content:space-between;gap:56px}
+  .hero-text{flex:1 1 auto;min-width:0}
+  .hero-photo{flex:none;margin:0;width:clamp(260px,30vw,380px)}
+  .hero-photo img{
+    display:block;width:100%;aspect-ratio:1/1;object-fit:cover;
+    border:4px solid var(--obi);border-radius:var(--r);
+    box-shadow:14px 14px 0 rgba(192,128,28,.28);
+  }
   .hero .eyebrow{color:var(--obi)}
   .hero .eyebrow::before{background:var(--obi)}
   .hero h1{
@@ -394,6 +402,8 @@
     .belt-stage ul{grid-template-columns:1fr}
     .ts-grid{grid-template-columns:1fr}
     .hero-kanji{font-size:min(70vw,440px);opacity:.04}
+    .hero-inner{flex-direction:column;align-items:flex-start;gap:44px}
+    .hero-photo{width:min(78%,340px);margin-bottom:14px}
   }
   @media(max-width:640px){
     body{font-size:17px}
@@ -419,6 +429,7 @@
 <header class="hero">
   <span class="hero-kanji" aria-hidden="true">柔道</span>
   <div class="hero-inner">
+    <div class="hero-text">
     <span class="eyebrow">Judo Educativo · Escolar e Desportivo</span>
     <h1>O judo entra na escola, no clube e <em>fica para a vida</em>.</h1>
     <p class="lede">Um programa estruturado, seguro e pedagogicamente orientado, que transforma o tatami numa sala de aula de movimento, respeito e autoconfiança — adaptável a cada ciclo de ensino e a cada contexto desportivo.</p>
@@ -426,6 +437,10 @@
       <a href="#comecar" class="btn btn-primary">Contactos <span class="arr">→</span></a>
       <a href="#o-programa" class="btn btn-ghost">Conhecer o programa</a>
     </div>
+    </div>
+    <figure class="hero-photo">
+      <img src="header.jpg" alt="Bruno Bento, treinador de judo" onerror="this.closest('figure').remove()">
+    </figure>
   </div>
   <div class="belt-rail" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
 </header>
